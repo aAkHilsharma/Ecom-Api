@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const Category = require("../models/category");
 
-// route - /api/category
+// route - /api/categories
 // method - get
-// desc - get all the categories
+// desc - get list of categories
 
 router.get("/", async (req, res) => {
   try {
@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// route - api/category
+// route - api/categories
 //method - post
 // desc - Create a new category
 
