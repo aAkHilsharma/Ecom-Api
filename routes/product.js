@@ -11,7 +11,7 @@ router.get("/category/:categoryId", async (req, res) => {
   try {
     const products = await Product.find(
       { categoryId },
-      "name price description, quantity"
+      "name price description quantity"
     );
     if (products.length === 0) {
       return res.status(404).json({
