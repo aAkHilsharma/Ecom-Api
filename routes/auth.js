@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const authmiddleware = require("../middleware/authMiddleware");
 const User = require("../models/user");
 
-// route - '/api/auth/register
+// route - '/api/users/register
 // method - post
 // desc - Register a user
 
@@ -38,9 +38,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// route - '/api/auth/login
+// route - '/api/users/login
 // method - post
-// desc - Authenticate a user and get token
+// desc - Authenticate a user and generate a token
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -86,11 +86,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// route - '/api/auth'
+// route - '/api/users/me'
 // method - get
-// desc - get logged in user details
+// desc - get authenticated user
 
-router.get("/", authmiddleware, async (req, res) => {
+router.get("/me", authmiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.user.id }).select(
       "-password"

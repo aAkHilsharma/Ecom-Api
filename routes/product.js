@@ -90,7 +90,7 @@ router.post("/", async (req, res) => {
 });
 
 // route '/api/products/:productId'
-// method - post
+// method - get
 // desc - get product details based on id
 
 router.get("/:productId", async (req, res) => {

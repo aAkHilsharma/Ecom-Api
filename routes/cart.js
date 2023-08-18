@@ -5,11 +5,11 @@ const authMiddleware = require("../middleware/authMiddleware");
 const Cart = require("../models/cart");
 const Product = require("../models/product");
 
-// route - '/api/cart/add/:productId'
+// route - '/api/cart/:productId'
 // method - post
 // desc - add product to the cart
 
-router.post("/add/:productId", authMiddleware, async (req, res) => {
+router.post("/:productId", authMiddleware, async (req, res) => {
   const userId = req.user.id;
   const productId = req.params.productId;
 
@@ -98,11 +98,11 @@ router.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-// route - 'api/cart/update/:productId'
+// route - 'api/cart/:productId'
 // method - put
 // desc - Update the quantity of a product in the cart
 
-router.put("/update/:productId", authMiddleware, async (req, res) => {
+router.put("/:productId", authMiddleware, async (req, res) => {
   const userId = req.user.id;
   const productId = req.params.productId;
   const newQuantity = req.body.quantity;
@@ -137,10 +137,24 @@ router.put("/update/:productId", authMiddleware, async (req, res) => {
         .json({ success: false, message: "Product not found in cart" });
     }
 
+    const productInCart = userCart.products[existingProductIndex];
+    const product = await Product.findById(productInCart.productId);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
     if (newQuantity === 0) {
       userCart.products.splice(existingProductIndex, 1);
-    } else {
+    } else if (newQuantity <= product.quantity) {
       userCart.products[existingProductIndex].quantity = newQuantity;
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid quantity value",
+      });
     }
 
     userCart.bill = userCart.products.reduce(
@@ -163,11 +177,11 @@ router.put("/update/:productId", authMiddleware, async (req, res) => {
   }
 });
 
-// route - 'api/cart/remove/:productId'
+// route - 'api/cart/:productId'
 // method - delete
 // desc - remove a product from the cart
 
-router.delete("/remove/:productId", authMiddleware, async (req, res) => {
+router.delete("/:productId", authMiddleware, async (req, res) => {
   const userId = req.user.id;
   const productId = req.params.productId;
 
