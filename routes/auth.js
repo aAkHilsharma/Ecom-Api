@@ -92,7 +92,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/", authmiddleware, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.body.userId }).select(
+    const user = await User.findOne({ _id: req.user.id }).select(
       "-password"
     );
     if (!user) {
