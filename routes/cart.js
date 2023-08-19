@@ -37,7 +37,17 @@ router.post("/:productId", authMiddleware, async (req, res) => {
     );
 
     if (existingProductIndex !== -1) {
-      userCart.products[existingProductIndex].quantity += 1;
+      if (
+        userCart.products[existingProductIndex].quantity + 1 <=
+        product.quantity
+      ) {
+        userCart.products[existingProductIndex].quantity += 1;
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Exceeds available quantity",
+        });
+      }
     } else {
       userCart.products.unshift({
         productId: productId,
@@ -113,7 +123,7 @@ router.put("/:productId", authMiddleware, async (req, res) => {
       .json({ success: false, message: "Invalid productId" });
   }
 
-  if (!Number.isInteger(newQuantity) || newQuantity <= 0) {
+  if (!Number.isInteger(newQuantity) || newQuantity < 0) {
     return res
       .status(400)
       .json({ success: false, message: "Invalid quantity value" });

@@ -19,7 +19,7 @@ router.get("/category/:categoryId", async (req, res) => {
         message: "No products with that category found",
       });
     }
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "Products fetched successfully",
       products,

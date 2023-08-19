@@ -9,19 +9,47 @@ const User = require("../models/user");
 // desc - Register a user
 
 router.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || typeof name !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "Name is required and must be a string",
+    });
+  }
+
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "Email is required and must be a string",
+    });
+  }
+
+  if (!password || typeof password !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "Password is required and must be a string",
+    });
+  }
+
   try {
-    const userExists = await User.findOne({ email: req.body.email });
+    const userExists = await User.findOne({ email });
     if (userExists)
-      return res
-        .status(400)
-        .json({ success: false, message: "User already exists" });
+      return res.status(400).json({
+        success: false,
+        message: "User with that email already exists",
+      });
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    req.body.password = hashedPassword;
+    password = hashedPassword;
 
-    const user = new User(req.body);
+    const user = new User({
+      name,
+      email,
+      password,
+    });
     await user.save();
 
     res.send({
@@ -30,10 +58,11 @@ router.post("/register", async (req, res) => {
     });
   } catch (err) {
     if (err) {
-      console.log(err);
-      return res
-        .status(500)
-        .send({ success: false, message: "Internal Server Error" });
+      return res.status(500).send({
+        success: false,
+        message: "Internal Server Error",
+        error: err.message,
+      });
     }
   }
 });
@@ -44,6 +73,20 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "Email is required and must be a string",
+    });
+  }
+
+  if (!password || typeof password !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "Password is required and must be a string",
+    });
+  }
 
   try {
     const user = await User.findOne({ email });
@@ -78,10 +121,13 @@ router.post("/login", async (req, res) => {
     );
   } catch (err) {
     if (err) {
-      console.log(err);
       return res
         .status(500)
-        .send({ success: false, message: "Internal Server Error" });
+        .send({
+          success: false,
+          message: "Internal Server Error",
+          error: err.message,
+        });
     }
   }
 });
@@ -92,9 +138,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/me", authmiddleware, async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.user.id }).select(
-      "-password"
-    );
+    const user = await User.findOne({ _id: req.user.id }).select("-password");
     if (!user) {
       return res.status(400).json({
         success: false,
