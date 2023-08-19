@@ -1,3 +1,106 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Cart
+ *   description: API endpoints for managing the user's cart
+ */
+
+/**
+ * @swagger
+ * /api/cart/{productId}:
+ *   post:
+ *     summary: Add a product to the cart
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the product to be added to the cart
+ *     responses:
+ *       200:
+ *         description: Product added to cart successfully
+ *       400:
+ *         description: Invalid productId or exceeds available quantity
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/cart:
+ *   get:
+ *     summary: View the cart
+ *     tags: [Cart]
+ *     responses:
+ *       200:
+ *         description: Cart fetched successfully
+ *       404:
+ *         description: Cart not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/cart/{productId}:
+ *   put:
+ *     summary: Update the quantity of a product in the cart
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the product in the cart
+ *       - in: body
+ *         name: quantity
+ *         schema:
+ *           type: object
+ *           properties:
+ *             quantity:
+ *               type: integer
+ *         required: true
+ *         description: New quantity for the product
+ *     responses:
+ *       200:
+ *         description: Product quantity updated in cart or product removed from cart
+ *       400:
+ *         description: Invalid productId or invalid quantity value
+ *       404:
+ *         description: Cart not found or product not found in cart
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/cart/{productId}:
+ *   delete:
+ *     summary: Remove a product from the cart
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the product to be removed from the cart
+ *     responses:
+ *       200:
+ *         description: Product removed from cart successfully
+ *       400:
+ *         description: Invalid productId
+ *       404:
+ *         description: Cart not found or product not found in cart
+ *       500:
+ *         description: Internal server error
+ */
+
 const router = require("express").Router();
 const mongoose = require("mongoose");
 

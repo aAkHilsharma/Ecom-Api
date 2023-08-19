@@ -1,3 +1,91 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: API endpoints for managing products
+ */
+
+/**
+ * @swagger
+ * /api/products/category/{categoryId}:
+ *   get:
+ *     summary: Get products based on category ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the category to retrieve products from
+ *     responses:
+ *       200:
+ *         description: Products fetched successfully
+ *       404:
+ *         description: No products with that category found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Create a new product
+ *     tags: [Products]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               description:
+ *                 type: string
+ *               quantity:
+ *                 type: number
+ *               categoryId:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - price
+ *               - categoryId
+ *               - quantity
+ *     responses:
+ *       201:
+ *         description: Product added successfully
+ *       400:
+ *         description: Invalid input data
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/products/{productId}:
+ *   get:
+ *     summary: Get product details by product ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the product to retrieve
+ *     responses:
+ *       200:
+ *         description: Product details retrieved successfully
+ *       400:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+
 const router = require("express").Router();
 const Product = require("../models/product");
 
@@ -103,13 +191,11 @@ router.get("/:productId", async (req, res) => {
         .status(400)
         .json({ success: false, message: "Product not found" });
     }
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Product fetched successfully",
-        product,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Product fetched successfully",
+      product,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

@@ -1,3 +1,81 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management
+ */
+
+/**
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     summary: Register a user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Successful response with User registered successfully
+ *       400:
+ *         description: Invalid request data
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Authenticate a user and generate a token
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with token
+ *       400:
+ *         description: Invalid request data or credentials
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get authenticated user
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successful response with authenticated user's details
+ *       400:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -52,7 +130,7 @@ router.post("/register", async (req, res) => {
     });
     await user.save();
 
-    res.send({
+    res.status(201).json({
       success: true,
       message: "User registered successfully",
     });
@@ -121,13 +199,11 @@ router.post("/login", async (req, res) => {
     );
   } catch (err) {
     if (err) {
-      return res
-        .status(500)
-        .send({
-          success: false,
-          message: "Internal Server Error",
-          error: err.message,
-        });
+      return res.status(500).send({
+        success: false,
+        message: "Internal Server Error",
+        error: err.message,
+      });
     }
   }
 });

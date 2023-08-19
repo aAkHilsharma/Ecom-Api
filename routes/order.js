@@ -1,3 +1,70 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: API endpoints for managing orders
+ */
+
+/**
+ * @swagger
+ * /api/orders:
+ *   post:
+ *     summary: Place an order from user's cart
+ *     tags: [Orders]
+ *     security:
+ *       - jwt: []
+ *     responses:
+ *       201:
+ *         description: Order placed successfully
+ *       400:
+ *         description: No products found in cart or insufficient quantity
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/orders/history:
+ *   get:
+ *     summary: View order history
+ *     tags: [Orders]
+ *     security:
+ *       - jwt: []
+ *     responses:
+ *       200:
+ *         description: Order history retrieved successfully
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/orders/{orderId}:
+ *   get:
+ *     summary: Get order details by order ID
+ *     tags: [Orders]
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - in: path
+ *         name: orderId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the order to retrieve
+ *     responses:
+ *       200:
+ *         description: Order details retrieved successfully
+ *       400:
+ *         description: Invalid orderId
+ *       404:
+ *         description: Order not found
+ *       500:
+ *         description: Internal server error
+ */
+
 const router = require("express").Router();
 const mongoose = require("mongoose");
 

@@ -4,6 +4,9 @@ require("./config/dbConfig");
 const app = express();
 const rateLimit = require("express-rate-limit");
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -12,6 +15,7 @@ const limiter = rateLimit({
 
 app.use(express.json());
 app.use(limiter);
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/users", require("./routes/auth"));
 app.use("/api/categories", require("./routes/category"));
